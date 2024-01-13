@@ -124,7 +124,6 @@ function drawObj(g: CanvasRenderingContext2D, obj: SceneObject): void {
   switch (obj.t) {
     case 'line':
       g.strokeStyle = palette[obj.color ?? M.Ck];
-
       g.beginPath();
       g.moveTo(-obj.start.x / obj.start.z, -obj.start.y / obj.start.z);
       g.lineTo(-obj.end.x / obj.end.z, -obj.end.y / obj.end.z);
@@ -180,9 +179,8 @@ class WidgetCanvas extends HTMLElement {
     const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
     const { width: w, height: h } = this.canvas.getBoundingClientRect();
 
-    g.reset();
+    g.resetTransform();
 
-    g.beginPath();
     g.fillStyle = '#fff';
     g.fillRect(0, 0, w, h);
 
