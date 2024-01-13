@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon-ql-pLk5c.ico" />
+    <title>aji's Molecube Page</title>
+    <script type="module" crossorigin src="./assets/index-pTh7uFWA.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index--w4CVidk.css">
+  </head>
+  <body>
+    <h1>aji's Molecube Page</h1>
+
+    <article>
+      <div class="sticky">
+        <p>
+          <img src="data:image/gif;base64,R0lGODlhMAAwAKEBAAAAANXP///7r9XP/yH5BAEKAAMALAAAAAAwADAAAAL+nI+py+3fABCwMuqkwLaLmU2cMnbGBy5aiWxspzFx871ttilzlF69LuLUbIadD4BznXKyFQT1YJ54yufHIslqSUSSRKUNi03cLyLskh6yDnWiWgym5wnkpUZjrub8kh34dxEn10eXENBiduAWVwjnEIA4gDKSpuPYdShpVOS2x2cSEAim+GloETlK+mX6WJFascFKKGvHNnB7EClqoWQahmuWa7CrStOYJjyrqJtq/PBrK23sTLY2x7y2UPwM8Rn8sFttfe3bPSAumm3ttB6cPkw+GeQOAO9uTQlVd39uIptjlARu/sgApCBQHD55k4bg4pdKEsMFBx+usaduYps+H81gaaTBkdi4jxSfcSMpiMFJlE0UOCv4MddLiSxVBNMSqWaFLOJ0AsLpjKZPTepECR2qC+hRpGK2IH2aoAAAOw==" />
+          <strong>Note:</strong> The diagrams in this article are interactive! You can click and
+          drag on them with your mouse to rotate the cube and view it from all sides.
+        </p>
+      </div>
+
+      <h2>Table Of Contents</h2>
+      <ul>
+        <li>
+          <a href="#the-puzzle">The Puzzle</a>
+          <ul>
+            <li><a href="#piece-inventory">Piece Inventory</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#counting-the-solutions">Counting The Solutions</a>
+          <ul>
+            <li><a href="#arranging-the-face-colors">Arranging The Face Colors</a></li>
+            <li><a href="#arranging-the-edge-colors">Arranging The Edge Colors</a></li>
+            <li><a href="#a-different-kind-of-puzzle">A Different Kind Of Puzzle</a></li>
+            <li><a href="#the-final-tally">The Final Tally</a></li>
+          </ul>
+        </li>
+        <li><a href="#solving-the-cube">Solving The Cube</a></li>
+      </ul>
+
+      <h2 id="the-puzzle">The Puzzle</h2>
+      <p>
+        The Molecube, sometimes called a Nine-Color Cube, is like a combination of a Rubik's Cube
+        and a sudoku puzzle. The puzzle consists of spheres in a 3&times;3&times;3 arrangement where
+        each face can be rotated in increments of 90&deg;, and the goal is to find a state where
+        each of the 9 colors appears exactly once on each face.
+      </p>
+      <div class="center hstack">
+        <figure>
+          <widget-canvas class="md">
+            <widget-cube data-init="YOG RBK CPW  PWC OxY BKR  KRB WCP GYO"></widget-cube>
+            <widget-axis data-dir="1 0 0" data-color="R"></widget-axis>
+            <widget-axis data-dir="0 1 0" data-color="G"></widget-axis>
+            <widget-axis data-dir="0 0 1" data-color="B"></widget-axis>
+          </widget-canvas>
+          <figcaption>The cube in a solved state.</figcaption>
+        </figure>
+      </div>
+      <p>
+        While superficially it seems like the puzzle could be solved in the same manner as a Rubik's
+        Cube, there is an important difference. With a Rubik's Cube, it's easy to tell if the
+        solution is getting closer or farther, since each piece is labeled with its exact location.
+        The Molecube, however, is not so generous. The two green spheres, for example, are corner
+        pieces, so they must be diagonally opposite from each other, but there are 4 such
+        configurations to choose from, and it's not immediately clear which of them would be correct
+        or how this interacts with the placement of the other corner pieces.
+      </p>
+      <p>
+        It turns out, however, that the Molecube is constrained in such a way that there are 80
+        possible solutions, each of which follows a pattern that is easy to learn. With a little bit
+        of practice you can learn how to identify and visualize these patterns, then solve the
+        puzzle from there.
+      </p>
+
+      <div class="center hstack">
+        <figure>
+          <widget-canvas class="lg">
+            <widget-tetrahedron></widget-tetrahedron>
+          </widget-canvas>
+        </figure>
+      </div>
+
+      <h3 id="piece-inventory">Piece Inventory</h3>
+
+      <div class="sticky">
+        <p>
+          <img src="data:image/gif;base64,R0lGODlhMAAwAKEBAAAAANXP///7r9XP/yH5BAEKAAMALAAAAAAwADAAAAL+nI+py+3fABCwMuqkwLaLmU2cMnbGBy5aiWxspzFx871ttilzlF69LuLUbIadD4BznXKyFQT1YJ54yufHIslqSUSSRKUNi03cLyLskh6yDnWiWgym5wnkpUZjrub8kh34dxEn10eXENBiduAWVwjnEIA4gDKSpuPYdShpVOS2x2cSEAim+GloETlK+mX6WJFascFKKGvHNnB7EClqoWQahmuWa7CrStOYJjyrqJtq/PBrK23sTLY2x7y2UPwM8Rn8sFttfe3bPSAumm3ttB6cPkw+GeQOAO9uTQlVd39uIptjlARu/sgApCBQHD55k4bg4pdKEsMFBx+usaduYps+H81gaaTBkdi4jxSfcSMpiMFJlE0UOCv4MddLiSxVBNMSqWaFLOJ0AsLpjKZPTepECR2qC+hRpGK2IH2aoAAAOw==" />
+          <strong>Note:</strong> It's helpful to take a moment to consider some of the relationships
+          between piece types. A corner piece sees 3 faces, 9 edges, and 6 corners. An edge piece
+          sees 2 faces, 6 edges, and 6 corners. A face piece sees 4 edges and 4 corners. The most
+          important of these will be how many faces each piece type sees, but the others will come
+          up from time to time as well.
+        </p>
+      </div>
+
+      <p>
+        Like a Rubik's Cube, a piece can never change type. For example, a corner piece can never
+        become an edge piece, and vice versa. Furthermore, like a Rubik's Cube, the relative
+        location of all the face pieces can never change. Although there are nine colors, not all
+        colors have the same inventory of piece types. The colors can be sorted into three types.
+      </p>
+
+      <h4>Green</h4>
+      <div class="hstack float">
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="Gxx xxx xxx  xxx xxx xxx  xxx xxx xxG"></widget-cube>
+          </widget-canvas>
+          <figcaption>The green pieces will always appear on opposite corners.</figcaption>
+        </figure>
+      </div>
+      <p>
+        The simplest color is <strong>green</strong> which consists of two corner pieces. Because
+        each corner sees 3 faces, the green pieces will always need to be placed on opposite
+        corners. This gives 4 possible choices for how to place them. As we will see, this is an
+        important starting point for finding solutions.
+      </p>
+
+      <h4>Edge Colors</h4>
+      <div class="hstack float">
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="xxx Rxx xPx Pxx xxx xxR xRx xxP xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>A highly symmetric arrangement of red and purple pieces.</figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="xPx xxR xxx  xxx xxx RxP  xRx Pxx xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>
+            A less symmetric arrangement, following a different kind of pattern.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        The next simplest colors are red and purple, which only appear as edge pieces so they are
+        called <strong>edge colors</strong>. There are three edge pieces for each color. The
+        possible arrangements are harder to classify than for the green pieces, but do follow a
+        pattern, as we will see later.
+      </p>
+
+      <h4>Face Colors</h4>
+      <div class="hstack float">
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="xxx xBx xxx  xWx OxY xKx  xxx xCx xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>Only the face pieces.</figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>One possible arrangement of the blue pieces.</figcaption>
+        </figure>
+      </div>
+      <p>
+        The remaining six colors are <strong>face colors</strong>, and have one face piece, one edge
+        piece, and one corner piece. It will occasionally be useful to group these colors in pairs
+        according to which colors appear opposite to each other. The face color pairs are white and
+        black, blue and cyan, and yellow and orange.
+      </p>
+
+      <h2 id="counting-the-solutions">Counting The Solutions</h2>
+      <p>
+        To learn the patterns of the solutions, we will first try to count them. Our approach will
+        be the same as many other types of counting problem: find the points where we get to make a
+        decision, count the number of decisions, then repeat until no more decisions are left. By
+        the end, we'll have a much clearer understanding of the kinds of solutions that exist, and
+        should be able to convince ourselves that we know exactly how many there are and what they
+        look like.
+      </p>
+
+      <h3 id="arranging-the-face-colors">Arranging The Face Colors</h3>
+      <p>
+        After the green pieces, the face colors are the easiest to characterize. The locations of
+        the face pieces are fixed, so for each color we only need to place a corner piece and an
+        edge piece. Because each face piece sees four corners, the matching corner piece must go on
+        one of the remaining four corners. Once the corner piece is placed, the location of the edge
+        piece is forced. In all four cases, the corner piece will be in the opposite face, and the
+        edge piece will be in the layer between the two faces.
+      </p>
+
+      <div class="hstack center">
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="KxK xBx KxK  xxx xxx xxx  WxW xxx WxW"></widget-cube>
+          </widget-canvas>
+          <figcaption>
+            The blue face piece. The blue corner piece can go in any of the spots marked in white,
+            and not in any of the spots marked in black.
+          </figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="xKx KBK xKx  KxK xxx KxW  BKx KxK xKx"></widget-cube>
+          </widget-canvas>
+          <figcaption>
+            The blue face and corner pieces placed. These pieces see all but one edge, marked in
+            white, where the blue edge piece must go.
+          </figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>The final arrangement for this particular choice of corner piece.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Let's now consider all the face colors together with the green corners. The placement of the
+        green corners will always use up 2 corners opposite of each other. The remaining corners
+        form something like a ring. Each corner always sees 3 faces, meaning the color that goes
+        there has to be one of the other 3 face colors.
+      </p>
+
+      <div class="center hstack">
+        <figure>
+          <widget-canvas class="md">
+            <widget-cube data-init="xxG xBx xxx  xWx OxY xKx  xxx xCx Gxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>All face colors, and an arbitrary choice of green corner.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        The placement of face colors into the remaining corners will force the placement of all the
+        face color edge pieces. In order for this to result in a valid solution, we need to find an
+        arrangement that doesn't force two edge pieces into the same spot, and still leaves room for
+        the red and purple edge pieces to fit in the remaining spots. Later we will characterize the
+        possible solutions in more detail.
+      </p>
+
+      <h3 id="arranging-the-edge-colors">Arranging The Edge Colors</h3>
+
+      <div class="hstack float">
+        <figure>
+          <widget-canvas class="xs">
+            <widget-cube data-init="xxx xWx xxx  RKx KxK xKR  xxx xWx xxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>
+            An illegal placement of red edge pieces. We can't place the third red piece because the
+            remaining faces, marked in white, are not adjacent.
+          </figcaption>
+        </figure>
+      </div>
+
+      <p>
+        The placement of edge colors is slightly harder to visualize than for face colors, but
+        follows a straightforward pattern. The first thing to note is that, because each edge piece
+        sees two adjacent faces, we can imagine our task as dividing the cube up into 3 pairs of
+        adjacent faces. In particular this means we can never place two edge colors diagonally
+        opposite of one another, because the remaining two faces would not be adjacent.
+      </p>
+
+      <p>
+        There are 8 ways to place each edge color which are all reflections and rotations of each
+        other. We can count them in the usual way. We know that the top layer must contain one of
+        the edge pieces, and there are 4 places for it. This will use up two faces, and the
+        remaining faces can be divided among the other two edge pieces in two ways, for a total of 8
+        options. Take a moment to convince yourself that this represents every possible choice.
+      </p>
+
+      <p>
+        Note that the placement of one color will reduce the options for how to place the other
+        color. For example, if we place red first, we have 8 options for how to place red, but less
+        than 8 for how to place purple. In other words, there are less than 64 options for how to
+        place the red and purple pieces together. However, the exact number is not important to us,
+        because later on we will need to consider the restrictions imposed by the placement of face
+        colors on the edges as well. All that matters for now is the patterns followed by the edge
+        colors individually, of which there are only 8.
+      </p>
+
+      <p>
+        There are many ways we can classify the options for edge color placement. One that will be
+        useful to us is based on the long diagonals, and the direction that the pieces wind around
+        it. Note that every layer contains a piece, regardless of the type of layer (e.g. front to
+        back, left to right, or top to bottom). If we look at the cube down the long diagonal and
+        step through the layers from front to back, the pieces will go around the long diagonal in
+        either a clockwise or counterclockwise direction. This gives another way for counting the
+        possible arrangements: there are 4 choices of long diagonal, and 2 choices of winding
+        direction.
+      </p>
+
+      <div class="center hstack">
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="xxG Wxx xWx  Wxx xxx xxW  xWx xxW Gxx"></widget-cube>
+            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          </widget-canvas>
+          <figcaption>
+            The long diagonal in green, and in white the "equator" that the pieces will wind around.
+          </figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="xxG xxx xRx  Rxx xxx xxx  xxx xxR Gxx"></widget-cube>
+            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          </widget-canvas>
+          <figcaption>
+            The red edges in a "clockwise" arrangement around the long diagonal in green.
+          </figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="xxG Rxx xxx  xxx xxx xxR  xRx xxx Gxx"></widget-cube>
+            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          </widget-canvas>
+          <figcaption>
+            The red edges in a "counterclockwise" arrangement around the long diagonal in green.
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3 id="a-different-kind-of-puzzle">A Different Kind Of Puzzle</h3>
+
+      <p>
+        In order to better understand the constraints on the face color placement, we will need to
+        change our perspective and look at the cube differently. We can represent the cube and its
+        edges as a hexagon as follows:
+      </p>
+
+      <div class="center hstack">
+        <figure>
+          <img src="./assets/cubeanim-Hi47dOlF.gif" width="240" height="240" />
+          <figcaption>Rearranging the cube and its edges into a hexagon.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Note also that the 6 corner vertices of the hexagon correspond to 6 corners on the cube, and
+        the center vertex corresponds to the other two corners which form a long diagonal.
+      </p>
+
+      <div class="hstack center">
+        <figure>
+          <img src="./assets/cubeanim-Hi47dOlF.gif" width="180" height="180" />
+          <figcaption>The 6 outside vertices of the hexagon, labeled with colors.</figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube data-init="RxK xxx PxB  xxx xxx xxx  OxY xxx KxG"></widget-cube>
+          </widget-canvas>
+          <figcaption>
+            The corresponding corners, labeled with the same colors, and the long diagonal in black.
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3 id="the-final-tally">The Final Tally</h3>
+    </article>
+  </body>
+</html>
