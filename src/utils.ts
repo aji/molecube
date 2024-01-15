@@ -1,3 +1,6 @@
+export const PI = Math.PI;
+export const TAU = 2 * Math.PI;
+
 export class AssertionError extends Error {}
 
 export function assert(cond: boolean, msg: string = 'assertion failed'): asserts cond {

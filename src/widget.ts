@@ -1,36 +1,31 @@
 import './widget.css';
-import * as M from './molecube.js';
 import {
-  Mat4,
-  Vec4,
   addv4,
+  crossm4,
   divv4,
   dotv4,
+  ew4,
+  ex4,
+  id4,
+  Mat4,
   mulmm4,
   mulmv4,
   mulv4,
   normv4,
+  oprojv4,
   origv4,
   pt4,
   rotxm4,
   rotym4,
+  scalem4,
   subv4,
-  transm4,
+  tlatem4,
+  tposem4,
+  Vec4,
 } from './geom.js';
-import { clamp, expected } from './utils.js';
-
-const palette: Record<number, string> = {
-  [M.Cb]: '#00f',
-  [M.Cc]: '#0ff',
-  [M.Cg]: '#080',
-  [M.Ck]: '#000',
-  [M.Co]: '#f80',
-  [M.Cp]: '#f0f',
-  [M.Cr]: '#f00',
-  [M.Cw]: '#fff',
-  [M.Cy]: '#ff0',
-  [M.xx]: '#888',
-};
+import * as M from './molecube.js';
+import { parseAngleAttr, parseColorAttr, parseDirAttr, parseNumAttr } from './parse.js';
+import { clamp, expected, PI, range, TAU } from './utils.js';
 
 type Camera = {
   dist: number;
@@ -38,8 +33,8 @@ type Camera = {
   alt: number;
 };
 
-type SceneSphere = { t: 'sphere'; at: Vec4; radius: number; color: number | undefined };
-type SceneLine = { t: 'line'; start: Vec4; end: Vec4; color: number | undefined };
+type SceneSphere = { t: 'sphere'; at: Vec4; radius: number; color?: number };
+type SceneLine = { t: 'line'; start: Vec4; end: Vec4; color?: number };
 type SceneObject = SceneSphere | SceneLine;
 
 function clipScene(input: SceneObject[]): SceneObject[] {
@@ -123,38 +118,66 @@ function depthOf(obj: SceneObject): number {
 function drawObj(g: CanvasRenderingContext2D, obj: SceneObject): void {
   switch (obj.t) {
     case 'line':
-      g.strokeStyle = palette[obj.color ?? M.Ck];
+      g.strokeStyle = M.palette[obj.color ?? M.Ck];
+      g.lineWidth = 0.02;
+      g.lineCap = 'round';
       g.beginPath();
       g.moveTo(-obj.start.x / obj.start.z, -obj.start.y / obj.start.z);
       g.lineTo(-obj.end.x / obj.end.z, -obj.end.y / obj.end.z);
       g.stroke();
       break;
     case 'sphere': {
+      const color = obj.color ?? M.xx;
       const f = -1 / obj.at.z;
+      const cx = f * obj.at.x;
+      const cy = f * obj.at.y;
+      const r = f * obj.radius;
+      g.fillStyle = M.palette[color];
+      g.beginPath();
+      g.ellipse(cx, cy, r, r, 0, 0, TAU);
+      g.fill();
+      if (color !== M.xx) {
+        const th = -PI / 4;
+        // highlight
+        g.fillStyle = '#ffffff66';
+        g.beginPath();
+        g.ellipse(cx - r * 0.45, cy + r * 0.45, r * 0.2, r * 0.3, th, 0, TAU);
+        g.fill();
+        // shadow
+        g.fillStyle = '#00000044';
+        g.beginPath();
+        const th0 = -PI / 2;
+        const th1 = PI / 2;
+        g.ellipse(cx, cy, r, r, th, th0, th1, false);
+        g.ellipse(cx, cy, r * 0.5, r, th + PI, th0, th1, true);
+        g.fill();
+      }
+      // outline
       g.strokeStyle = '#000';
-      g.fillStyle = palette[obj.color ?? M.xx];
       g.beginPath();
       g.ellipse(f * obj.at.x, f * obj.at.y, f * obj.radius, f * obj.radius, 0, 0, 2 * Math.PI);
-      g.fill();
       g.stroke();
-      g.restore();
       break;
     }
   }
 }
 
+function viewMatrix(up: Vec4): Mat4 {
+  const y = normv4(up);
+  const x = normv4(oprojv4(ex4, up));
+  const z = mulmv4(crossm4(x), y);
+  return tposem4({ x, y, z, w: ew4 });
+}
+
 class WidgetCanvas extends HTMLElement {
   static activeWidget: WidgetCanvas | undefined;
 
-  cube: M.Molecube;
   camera: Camera;
-
   canvas: HTMLCanvasElement;
 
   constructor() {
     super();
 
-    this.cube = M.Molecube.initial();
     this.camera = { dist: 10, az: Math.PI / 4, alt: Math.PI / 5 };
 
     this.canvas = document.createElement('canvas');
@@ -172,6 +195,9 @@ class WidgetCanvas extends HTMLElement {
     this.canvas.setAttribute('width', `${rect.width}`);
     this.canvas.setAttribute('height', `${rect.height}`);
 
+    this.camera.az = parseAngleAttr(this.getAttribute('az')) ?? this.camera.az;
+    this.camera.alt = parseAngleAttr(this.getAttribute('alt')) ?? this.camera.alt;
+
     this.requestAnimationFrame();
   }
 
@@ -188,10 +214,14 @@ class WidgetCanvas extends HTMLElement {
     g.translate(w / 2, h / 2);
     g.scale(h * 2, -h * 2);
 
+    const lookUp = parseDirAttr(this.getAttribute('up'));
+    const look = lookUp !== null ? viewMatrix(lookUp) : id4;
+
     const cam = mulmm4(
-      transm4(0, 0, -this.camera.dist),
+      tlatem4(0, 0, -this.camera.dist),
       rotxm4(this.camera.alt),
-      rotym4(-this.camera.az)
+      rotym4(-this.camera.az),
+      look
     );
 
     const objects: SceneObject[] = [];
@@ -201,9 +231,15 @@ class WidgetCanvas extends HTMLElement {
     }
 
     const draw: [number, SceneObject][] = [];
-    for (const obj of clipScene(objects)) draw.push([depthOf(obj), obj]);
+    for (const obj of clipScene(objects)) {
+      draw.push([depthOf(obj), obj]);
+    }
     draw.sort((a, b) => a[0] - b[0]);
-    for (const [, obj] of draw) drawObj(g, obj);
+    for (const [, obj] of draw) {
+      g.save();
+      drawObj(g, obj);
+      g.restore();
+    }
   }
 
   requestAnimationFrame() {
@@ -243,19 +279,6 @@ abstract class Renderable extends HTMLElement {
   abstract render(): SceneObject[];
 }
 
-const alphabet: Record<string, number | undefined> = {
-  B: M.Cb,
-  C: M.Cc,
-  G: M.Cg,
-  K: M.Ck,
-  O: M.Co,
-  P: M.Cp,
-  R: M.Cr,
-  W: M.Cw,
-  Y: M.Cy,
-  x: M.xx,
-};
-
 class WidgetCube extends Renderable {
   cube: M.Molecube;
 
@@ -265,14 +288,10 @@ class WidgetCube extends Renderable {
   }
 
   connectedCallback() {
-    const init = this.getAttribute('data-init');
+    const init = parseColorAttr(this.getAttribute('init'));
     if (init !== null) {
-      let j = 0;
-      for (let i = 0; i < init.length && j < 27; i++) {
-        const x = alphabet[init.charAt(i)];
-        if (x !== undefined) {
-          this.cube.data[j++] = x;
-        }
+      for (let i = 0; i < 27; i++) {
+        this.cube.data[i] = init[i] ?? M.xx;
       }
     }
   }
@@ -298,16 +317,57 @@ class WidgetCube extends Renderable {
 
 class WidgetAxis extends Renderable {
   render(): SceneObject[] {
-    const dir = parseDirAttr(this.getAttribute('data-dir'));
+    const len = parseNumAttr(this.getAttribute('len')) ?? 1;
+    const dir = parseDirAttr(this.getAttribute('dir'));
     if (dir === null) return [];
-    const dir1 = mulv4(normv4(dir), 3);
+    const dir1 = mulv4(normv4(dir), len * 3);
     const line: SceneLine = {
       t: 'line',
       start: addv4(origv4, dir1),
       end: addv4(origv4, mulv4(dir1, -1)),
-      color: alphabet[this.getAttribute('data-color') ?? 'x'] ?? M.xx,
+      color: parseColorAttr(this.getAttribute('color'))?.[0] ?? M.xx,
     };
     return [line];
+  }
+}
+
+class WidgetBox extends Renderable {
+  // prettier-ignore
+  static edges = [
+    [0, 1], [2, 3], [4, 5], [6, 7], // x axis
+    [0, 2], [1, 3], [4, 6], [5, 7], // y axis
+    [0, 4], [1, 5], [2, 6], [3, 7], // z axis
+  ];
+
+  points: Vec4[];
+
+  constructor() {
+    super();
+    this.points = range(8).map((x) => pt4(x & 1 ? 1 : -1, x & 2 ? -1 : 1, x & 4 ? -1 : 1));
+  }
+
+  render(): SceneObject[] {
+    const scale = parseNumAttr(this.getAttribute('scale'));
+    const tform = scale === null ? id4 : scalem4(scale, scale, scale);
+    const points = this.points.map((x) => mulmv4(tform, x));
+
+    const edgeColors = parseColorAttr(this.getAttribute('edges')) ?? [];
+    const vertexColors = parseColorAttr(this.getAttribute('vertices')) ?? [];
+
+    const spheres: SceneSphere[] = [];
+    const lines: SceneLine[] = [];
+
+    for (let i = 0; i < 8; i++) {
+      const color = vertexColors[i] ?? M.xx;
+      if (color === M.xx) continue;
+      spheres.push({ t: 'sphere', color, at: points[i], radius: 0.3 });
+    }
+    for (let i = 0; i < 12; i++) {
+      const [a, b] = WidgetBox.edges[i];
+      lines.push({ t: 'line', color: edgeColors[i] ?? M.xx, start: points[a], end: points[b] });
+    }
+
+    return [...spheres, ...lines];
   }
 }
 
@@ -336,21 +396,10 @@ class WidgetTetrahedron extends Renderable {
   }
 }
 
-function parseDirAttr(s: string | null): Vec4 | null {
-  if (s === null) return null;
-  const m = s.match(/^ *([-0-9.]+) +([-0-9.]+) +([-0-9.]+) *$/);
-  if (m === null) return null;
-  return {
-    x: Number.parseFloat(m[1]),
-    y: Number.parseFloat(m[2]),
-    z: Number.parseFloat(m[3]),
-    w: 0,
-  };
-}
-
 export function setup() {
   customElements.define('widget-cube', WidgetCube);
   customElements.define('widget-axis', WidgetAxis);
   customElements.define('widget-tetrahedron', WidgetTetrahedron);
+  customElements.define('widget-box', WidgetBox);
   customElements.define('widget-canvas', WidgetCanvas);
 }

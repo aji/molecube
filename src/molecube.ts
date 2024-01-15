@@ -301,6 +301,19 @@ export const
     Cg, Cy, Co,
   ];
 
+export const palette: Record<number, string> = {
+  [Cb]: '#00c',
+  [Cc]: '#0cf',
+  [Cg]: '#080',
+  [Ck]: '#000',
+  [Co]: '#f70',
+  [Cp]: '#90f',
+  [Cr]: '#f00',
+  [Cw]: '#fff',
+  [Cy]: '#fc0',
+  [xx]: '#888',
+};
+
 export class Molecube {
   constructor(public data: number[]) {}
 

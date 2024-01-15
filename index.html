@@ -8,7 +8,10 @@
     <title>aji's Molecube Page</title>
   </head>
   <body>
-    <h1>aji's Molecube Page</h1>
+    <header>
+      <h1>aji's Molecube Page</h1>
+      <p>January 14, 2024</p>
+    </header>
 
     <article>
       <div class="sticky">
@@ -28,15 +31,24 @@
           </ul>
         </li>
         <li>
-          <a href="#counting-the-solutions">Counting The Solutions</a>
+          <a href="#exploring-the-constraints">Exploring The Constraints</a>
           <ul>
             <li><a href="#arranging-the-face-colors">Arranging The Face Colors</a></li>
             <li><a href="#arranging-the-edge-colors">Arranging The Edge Colors</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#counting-the-solutions">Counting The Solutions</a>
+          <ul>
             <li><a href="#a-different-kind-of-puzzle">A Different Kind Of Puzzle</a></li>
+            <li><a href="#edge-colors-on-the-hexagon">Edge Colors On The Hexagon</a></li>
+            <li><a href="#face-colors-on-the-hexagon">Face Colors On The Hexagon</a></li>
             <li><a href="#the-final-tally">The Final Tally</a></li>
           </ul>
         </li>
-        <li><a href="#solving-the-cube">Solving The Cube</a></li>
+        <li>
+          <a href="#other-work">Other Work</a>
+        </li>
       </ul>
 
       <h2 id="the-puzzle">The Puzzle</h2>
@@ -49,7 +61,7 @@
       <div class="center hstack">
         <figure>
           <widget-canvas class="md">
-            <widget-cube data-init="YOG RBK CPW  PWC OxY BKR  KRB WCP GYO"></widget-cube>
+            <widget-cube init="YOG RBK CPW  PWC OxY BKR  KRB WCP GYO"></widget-cube>
           </widget-canvas>
           <figcaption>The cube in a solved state.</figcaption>
         </figure>
@@ -65,13 +77,30 @@
       </p>
       <p>
         It turns out, however, that the Molecube is constrained in such a way that there are 80
-        possible solutions, each of which follows a pattern that is easy to learn. With a little bit
-        of practice you can learn how to identify and visualize these patterns, then solve the
-        puzzle from there.
+        possible solutions, which we will show in this article. In doing this, we will familiarize
+        ourselves with the constraints of the cube and learn how the different solutions can be
+        broken down and classified. Familiarity with the Rubik's Cube and basic group theory is a
+        helpful prerequisite, but is not required.
       </p>
 
       <h3 id="piece-inventory">Piece Inventory</h3>
-
+      <p>
+        Like a Rubik's Cube, a piece can never change type. For example, a corner piece can never
+        become an edge piece, and vice versa. Furthermore, like a Rubik's Cube, the relative
+        location of all the face pieces can never change. Although there are nine colors, not all
+        colors have the same inventory of piece types. The colors can be sorted into three types.
+      </p>
+      <p>
+        Note that we will frequently distinguish between <strong>colors</strong> and
+        <strong>pieces</strong>. When we talk about an "edge color" or a "face color" we are
+        referring to the entire inventory of pieces that consist of that color. On the other hand if
+        we say "edge piece", "corner piece", or "face piece", we are referring either to all the
+        pieces of that type, or to the locations on the cube where those pieces could go. It's
+        important to pay attention to this distinction, because the term "face color" does not
+        obviously imply edge and corner pieces, but that is exactly the sense in which we are using
+        it. Likewise, while the term "edge pieces" does include the edge colors, it also includes
+        the edge pieces of the face colors.
+      </p>
       <div class="sticky">
         <p>
           <img src="./assets/lightbulb.gif" />
@@ -83,18 +112,11 @@
         </p>
       </div>
 
-      <p>
-        Like a Rubik's Cube, a piece can never change type. For example, a corner piece can never
-        become an edge piece, and vice versa. Furthermore, like a Rubik's Cube, the relative
-        location of all the face pieces can never change. Although there are nine colors, not all
-        colors have the same inventory of piece types. The colors can be sorted into three types.
-      </p>
-
       <h4>Green</h4>
       <div class="hstack float">
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="Gxx xxx xxx  xxx xxx xxx  xxx xxx xxG"></widget-cube>
+            <widget-cube init="Gxx xxx xxx  xxx xxx xxx  xxx xxx xxG"></widget-cube>
           </widget-canvas>
           <figcaption>The green pieces will always appear on opposite corners.</figcaption>
         </figure>
@@ -110,13 +132,13 @@
       <div class="hstack float">
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="xxx Rxx xPx Pxx xxx xxR xRx xxP xxx"></widget-cube>
+            <widget-cube init="xxx Rxx xPx Pxx xxx xxR xRx xxP xxx"></widget-cube>
           </widget-canvas>
           <figcaption>A highly symmetric arrangement of red and purple pieces.</figcaption>
         </figure>
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="xPx xxR xxx  xxx xxx RxP  xRx Pxx xxx"></widget-cube>
+            <widget-cube init="xPx xxR xxx  xxx xxx RxP  xRx Pxx xxx"></widget-cube>
           </widget-canvas>
           <figcaption>
             A less symmetric arrangement, following a different kind of pattern.
@@ -125,7 +147,7 @@
       </div>
       <p>
         The next simplest colors are red and purple, which only appear as edge pieces so they are
-        called <strong>edge colors</strong>. There are three edge pieces for each color. The
+        called <strong>edge colors</strong>. There are three edge pieces for each edge color. The
         possible arrangements are harder to classify than for the green pieces, but do follow a
         pattern, as we will see later.
       </p>
@@ -134,13 +156,13 @@
       <div class="hstack float">
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="xxx xBx xxx  xWx OxY xKx  xxx xCx xxx"></widget-cube>
+            <widget-cube init="xxx xBx xxx  xWx OxY xKx  xxx xCx xxx"></widget-cube>
           </widget-canvas>
           <figcaption>Only the face pieces.</figcaption>
         </figure>
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
+            <widget-cube init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
           </widget-canvas>
           <figcaption>One possible arrangement of the blue pieces.</figcaption>
         </figure>
@@ -152,30 +174,32 @@
         black, blue and cyan, and yellow and orange.
       </p>
 
-      <h2 id="counting-the-solutions">Counting The Solutions</h2>
+      <h2 id="exploring-the-constraints">Exploring The Constraints</h2>
       <p>
-        To learn the patterns of the solutions, we will first try to count them. Our approach will
-        be the same as many other types of counting problem: find the points where we get to make a
-        decision, count the number of decisions, then repeat until no more decisions are left. By
-        the end, we'll have a much clearer understanding of the kinds of solutions that exist, and
-        should be able to convince ourselves that we know exactly how many there are and what they
-        look like.
+        Having familiarized ourselves with the types of pieces, it's now time to dive deeper into
+        the constraints on the placement of face colors and edge colors. For now we'll only focus on
+        one color at a time. The interactions between colors will be explored when we count the
+        solutions. This section is mainly about familiarizing ourselves with how the rules of the
+        puzzle constrain the placement of the different piece types, and characterizing the possible
+        arrangements in a way that will make it easier to wrap our heads around how these
+        constraints interact.
       </p>
 
       <h3 id="arranging-the-face-colors">Arranging The Face Colors</h3>
       <p>
-        After the green pieces, the face colors are the easiest to characterize. The locations of
-        the face pieces are fixed, so for each color we only need to place a corner piece and an
-        edge piece. Because each face piece sees four corners, the matching corner piece must go on
-        one of the remaining four corners. Once the corner piece is placed, the location of the edge
-        piece is forced. In all four cases, the corner piece will be in the opposite face, and the
-        edge piece will be in the layer between the two faces.
+        The green pieces are the easiest to place, and when introducing them we already explained
+        that they must go on opposite corners. After the green pieces, the face colors are the
+        easiest to characterize. The locations of the face pieces are fixed, so for each color we
+        only need to place a corner piece and an edge piece. Because each face piece sees four
+        corners, the matching corner piece must go on one of the remaining four corners. Once the
+        corner piece is placed, the location of the edge piece is forced. In all four cases, the
+        corner piece will be in the opposite face, and the edge piece will be in the layer between
+        the two faces.
       </p>
-
       <div class="hstack center">
         <figure>
           <widget-canvas class="sm">
-            <widget-cube data-init="KxK xBx KxK  xxx xxx xxx  WxW xxx WxW"></widget-cube>
+            <widget-cube init="KxK xBx KxK  xxx xxx xxx  WxW xxx WxW"></widget-cube>
           </widget-canvas>
           <figcaption>
             The blue face piece. The blue corner piece can go in any of the spots marked in white,
@@ -184,7 +208,7 @@
         </figure>
         <figure>
           <widget-canvas class="sm">
-            <widget-cube data-init="xKx KBK xKx  KxK xxx KxW  BKx KxK xKx"></widget-cube>
+            <widget-cube init="xKx KBK xKx  KxK xxx KxW  BKx KxK xKx"></widget-cube>
           </widget-canvas>
           <figcaption>
             The blue face and corner pieces placed. These pieces see all but one edge, marked in
@@ -193,42 +217,48 @@
         </figure>
         <figure>
           <widget-canvas class="sm">
-            <widget-cube data-init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
+            <widget-cube init="xxx xBx xxx  xxx xxx xxB  Bxx xxx xxx"></widget-cube>
           </widget-canvas>
           <figcaption>The final arrangement for this particular choice of corner piece.</figcaption>
         </figure>
       </div>
-
       <p>
-        Let's now consider all the face colors together with the green corners. The placement of the
-        green corners will always use up 2 corners opposite of each other. The remaining corners
-        form something like a ring. Each corner always sees 3 faces, meaning the color that goes
-        there has to be one of the other 3 face colors.
+        Notice how there are only 4 choices for how to place the corner and edge pieces for any
+        given face color, and also that all of these arrangements are rotations of each other around
+        the axis intersecting the matching face piece. Knowing this, we could also imagine first
+        placing the edge piece in one of its 4 valid positions in the middle layer, followed by
+        placing the corner piece. However, it's best to imagine placing both pieces at the same time
+        by choosing one of the 4 valid configurations.
       </p>
-
       <div class="center hstack">
         <figure>
           <widget-canvas class="md">
-            <widget-cube data-init="xxG xBx xxx  xWx OxY xKx  xxx xCx Gxx"></widget-cube>
+            <widget-cube init="xxx BxW WxW  xBx xxx xxx  xxx WxW WxB"></widget-cube>
+            <widget-axis dir="0 1 0" color="B"></widget-axis>
           </widget-canvas>
-          <figcaption>All face colors, and an arbitrary choice of green corner.</figcaption>
+          <figcaption>
+            All valid arrangements of the blue pieces are rotations of each other around the blue
+            axis. In white are the other positions that can be used.
+          </figcaption>
         </figure>
       </div>
-
       <p>
-        The placement of face colors into the remaining corners will force the placement of all the
-        face color edge pieces. In order for this to result in a valid solution, we need to find an
-        arrangement that doesn't force two edge pieces into the same spot, and still leaves room for
-        the red and purple edge pieces to fit in the remaining spots. Later we will characterize the
-        possible solutions in more detail.
+        What kinds of things might further constrain the placement of a face color's edge and corner
+        pieces? For the corner piece we know that one of the possible corners will always be used by
+        a green piece, since every face must have a green piece and they always show up as corners.
+        For the edge piece, the available edges can only be used by an edge color or another face
+        color. However, not all face colors are possible. Since a face color's edge piece must be
+        placed on an edge perpendicular to that face and every edge is only perpendicular to two
+        faces, each edge can in fact only support two face colors and the two edge colors. Later
+        will develop tools for understanding the interactions between these constraints at a global
+        level.
       </p>
 
       <h3 id="arranging-the-edge-colors">Arranging The Edge Colors</h3>
-
       <div class="hstack float">
         <figure>
           <widget-canvas class="xs">
-            <widget-cube data-init="xxx xWx xxx  RKx KxK xKR  xxx xWx xxx"></widget-cube>
+            <widget-cube init="xxx xWx xxx  RKx KxK xKR  xxx xWx xxx"></widget-cube>
           </widget-canvas>
           <figcaption>
             An illegal placement of red edge pieces. We can't place the third red piece because the
@@ -236,7 +266,6 @@
           </figcaption>
         </figure>
       </div>
-
       <p>
         The placement of edge colors is slightly harder to visualize than for face colors, but
         follows a straightforward pattern. The first thing to note is that, because each edge piece
@@ -244,25 +273,22 @@
         adjacent faces. In particular this means we can never place two edge colors diagonally
         opposite of one another, because the remaining two faces would not be adjacent.
       </p>
-
       <p>
         There are 8 ways to place each edge color which are all reflections and rotations of each
         other. We can count them in the usual way. We know that the top layer must contain one of
-        the edge pieces, and there are 4 places for it. This will use up two faces, and the
-        remaining faces can be divided among the other two edge pieces in two ways, for a total of 8
-        options. Take a moment to convince yourself that this represents every possible choice.
+        the edge pieces, and there are 4 places for it. This will use up two faces. The bottom face
+        must also contain an edge piece, and only 2 of them are a valid choice. The placement of the
+        remaining edge piece is forced, giving a total of 8 possible arrangements.
       </p>
-
       <p>
         Note that the placement of one color will reduce the options for how to place the other
-        color. For example, if we place red first, we have 8 options for how to place red, but less
+        color. For example, if we choose to place red first, we have 8 options for red, but less
         than 8 for how to place purple. In other words, there are less than 64 options for how to
         place the red and purple pieces together. However, the exact number is not important to us,
         because later on we will need to consider the restrictions imposed by the placement of face
         colors on the edges as well. All that matters for now is the patterns followed by the edge
         colors individually, of which there are only 8.
       </p>
-
       <p>
         There are many ways we can classify the options for edge color placement. One that will be
         useful to us is based on the long diagonals, and the direction that the pieces wind around
@@ -273,30 +299,29 @@
         possible arrangements: there are 4 choices of long diagonal, and 2 choices of winding
         direction.
       </p>
-
       <div class="center hstack">
         <figure>
-          <widget-canvas class="sm">
-            <widget-cube data-init="xxG Wxx xWx  Wxx xxx xxW  xWx xxW Gxx"></widget-cube>
-            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          <widget-canvas class="sm" up="1 1 1" az="90" alt="75">
+            <widget-cube init="xxG Wxx xWx  Wxx xxx xxW  xWx xxW Gxx"></widget-cube>
+            <widget-axis dir="1 1 1" color="G"></widget-axis>
           </widget-canvas>
           <figcaption>
             The long diagonal in green, and in white the "equator" that the pieces will wind around.
           </figcaption>
         </figure>
         <figure>
-          <widget-canvas class="sm">
-            <widget-cube data-init="xxG xxx xRx  Rxx xxx xxx  xxx xxR Gxx"></widget-cube>
-            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          <widget-canvas class="sm" up="1 1 1" az="90" alt="75">
+            <widget-cube init="xxG xxx xRx  Rxx xxx xxx  xxx xxR Gxx"></widget-cube>
+            <widget-axis dir="1 1 1" color="G"></widget-axis>
           </widget-canvas>
           <figcaption>
             The red edges in a "clockwise" arrangement around the long diagonal in green.
           </figcaption>
         </figure>
         <figure>
-          <widget-canvas class="sm">
-            <widget-cube data-init="xxG Rxx xxx  xxx xxx xxR  xRx xxx Gxx"></widget-cube>
-            <widget-axis data-dir="1 1 1" data-color="G"></widget-axis>
+          <widget-canvas class="sm" up="1 1 1" az="90" alt="75">
+            <widget-cube init="xxG Rxx xxx  xxx xxx xxR  xRx xxx Gxx"></widget-cube>
+            <widget-axis dir="1 1 1" color="G"></widget-axis>
           </widget-canvas>
           <figcaption>
             The red edges in a "counterclockwise" arrangement around the long diagonal in green.
@@ -304,42 +329,540 @@
         </figure>
       </div>
 
-      <h3 id="a-different-kind-of-puzzle">A Different Kind Of Puzzle</h3>
-
+      <h2 id="counting-the-solutions">Counting The Solutions</h2>
       <p>
-        In order to better understand the constraints on the face color placement, we will need to
-        change our perspective and look at the cube differently. We can represent the cube and its
-        edges as a hexagon as follows:
+        To count the solutions, we will have to explore the constraints in more detail and figure
+        out what decisions we get to make and how many choices there are. We will also need to do
+        this in a way that convincingly leaves out no possibilities.
       </p>
+      <div class="sticky">
+        <p>
+          <img src="./assets/lightbulb.gif" />
+          An important question to ask at this point is whether a particular arrangement of pieces
+          is actually reachable by twisting the faces of the cube. We can in fact reach any
+          arrangement by solving the cube like a Rubik's Cube. Many approaches are possible, but one
+          is to use CFOP strategies for the first two layers, skip OLL, and use 2-look PLL
+          algorithms for last layer. If we find ourselves in a situation where we only need to swap
+          two edge pieces, we can do a PLL pair swap with a setup move that places two red or purple
+          pieces where one of the pairs is. Swapping the red or purple pieces will have no effect on
+          the overall solution, meaning the pair swap acts like a single edge swap.
+        </p>
+      </div>
 
+      <h3 id="a-different-kind-of-puzzle">A Different Kind Of Puzzle</h3>
+      <p>
+        Before we continue, we need to start looking at the cube differently. We can represent the
+        cube and its edges as a hexagon. Note that, except for the two corners of a long diagonal,
+        every corner and edge of the cube is represented with a corner or edge of the hexagon
+        diagram.
+      </p>
       <div class="center hstack">
         <figure>
           <img src="./assets/cubeanim.gif" width="240" height="240" />
           <figcaption>Rearranging the cube and its edges into a hexagon.</figcaption>
         </figure>
-      </div>
-
-      <p>
-        Note also that the 6 corner vertices of the hexagon correspond to 6 corners on the cube, and
-        the center vertex corresponds to the other two corners which form a long diagonal.
-      </p>
-
-      <div class="hstack center">
         <figure>
-          <img src="./assets/cubeanim.gif" width="180" height="180" />
-          <figcaption>The 6 outside vertices of the hexagon, labeled with colors.</figcaption>
-        </figure>
-        <figure>
-          <widget-canvas class="sm">
-            <widget-cube data-init="RxK xxx PxB  xxx xxx xxx  OxY xxx KxG"></widget-cube>
-          </widget-canvas>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <widget-canvas class="xs" az="40" alt="30">
+                    <widget-box scale="1.2" vertices="RxPBOYxG"></widget-box>
+                  </widget-canvas>
+                </td>
+                <td>
+                  <widget-canvas class="xs" az="40" alt="30">
+                    <widget-box scale="1.2" edges="RRRRYYYYBBBB"></widget-box>
+                  </widget-canvas>
+                </td>
+              </tr>
+              <tr>
+                <td><hexagon-canvas class="xs" vertices="ROYGBP"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="RRRRYYYYBBBB"></hexagon-canvas></td>
+              </tr>
+            </tbody>
+          </table>
           <figcaption>
-            The corresponding corners, labeled with the same colors, and the long diagonal in black.
+            The cubes in the top row correspond to the hexagons underneath them.
           </figcaption>
         </figure>
       </div>
+      <p>
+        This might seem like a small change, but it has an important effect: the cube is a
+        3-dimensional object, while the hexagon is 2-dimensional. The hexagon and the cube have a
+        different set of geometric symmetries, meaning some symmetric aspects of the constraints
+        which are hard to visualize on the cube become much easier to reason about when represented
+        on the hexagon. Furthermore, we know the green pieces will be placed on a long diagonal, and
+        that the center point of the hexagon corresponds to two diagonally opposite corners, meaning
+        that, if we place the green pieces at the center, we no longer have to think of them as
+        being in two places.
+      </p>
+
+      <h3 id="edge-colors-on-the-hexagon">Edge Colors On The Hexagon</h3>
+      <p>
+        We know that we can place edge colors by picking a long diagonal and winding the pieces
+        around in either a clockwise or counterclockwise direction. We also know that the long
+        diagonals are symmetric under rotation by 90&deg; around the axes perpendicular to the
+        faces, an action with a cycle length of 4. So, our strategy for enumerating the hexagon
+        diagrams for all the placements of edge colors will be to write out the clockwise and
+        counterclockwise arrangements for one choice of long diagonal, then rotate it by 90&deg;
+        four times for one choice of axis. Luckily for us, starting with the long diagonal
+        represented by the center of the hexagon turns out to produce the simplest diagrams.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <widget-canvas class="xs">
+                    <widget-cube init="xxG xxx xRx  Rxx xxx xxx  xxx xxR Gxx"></widget-cube>
+                    <widget-axis dir="1 1 1" color="G"></widget-axis>
+                  </widget-canvas>
+                </td>
+                <td>
+                  <widget-canvas class="xs" az="40" alt="30">
+                    <widget-box scale="1.3" vertices="xGxxxxGx" edges="xRxx xxxR Rxxx"></widget-box>
+                    <widget-axis dir="1 1 1" color="G"></widget-axis>
+                  </widget-canvas>
+                </td>
+                <td><hexagon-canvas class="xs" edges="xRxx xxxR Rxxx"></hexagon-canvas></td>
+              </tr>
+              <tr>
+                <td>
+                  <widget-canvas class="xs">
+                    <widget-cube init="xxG Rxx xxx  xxx xxx xxR  xRx xxx Gxx"></widget-cube>
+                    <widget-axis dir="1 1 1" color="G"></widget-axis>
+                  </widget-canvas>
+                </td>
+                <td>
+                  <widget-canvas class="xs" az="40" alt="30">
+                    <widget-box scale="1.3" vertices="xGxxxxGx" edges="xxRx Rxxx xxxR"></widget-box>
+                    <widget-axis dir="1 1 1" color="G"></widget-axis>
+                  </widget-canvas>
+                </td>
+                <td><hexagon-canvas class="xs" edges="xxRx Rxxx xxxR"></hexagon-canvas></td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption>
+            Placing the red pieces clockwise (top row) and counterclockwise (bottom row) around the
+            long diagonal in the center of the hexagon.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        Now all we need to do is rotate these diagrams by 90&deg; around an axis. We'll do a
+        clockwise rotation looking at the top of the cube, called a <strong>y</strong> move in
+        Rubik's Cube notation. To visualize the effect this will have on the hexagon, it's easiest
+        to imagine the three 4-cycles of edges:
+      </p>
+      <div class="hstack center">
+        <figure>
+          <widget-canvas class="sm" az="40" alt="30">
+            <widget-box scale="1.3" edges="RBRB YYYY RRBB"></widget-box>
+          </widget-canvas>
+          <figcaption>
+            The three 4-cycles of edges when rotating the cube around the Y axis.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" edges="RBRB YYYY RRBB"></hexagon-canvas>
+          <figcaption>The same cycles on the hexagon.</figcaption>
+        </figure>
+      </div>
+      <p>
+        Each 4-cycle has one edge piece in it. When we rotate the cube by 90&deg;, the edge piece
+        will move to the next edge in the cycle. Doing this 3 times from our two starting positions
+        will give us the 8 possible arrangements of the red pieces on the hexagon, listed out in the
+        following table.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tbody>
+              <tr>
+                <td><hexagon-canvas class="xs" edges="xRxx xxxR Rxxx"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="xxRx xRxx xxRx"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="xxxR Rxxx xRxx"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="Rxxx xxRx xxxR"></hexagon-canvas></td>
+              </tr>
+              <tr>
+                <td><hexagon-canvas class="xs" edges="xxRx Rxxx xxxR"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="xRxx xxRx xRxx"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="Rxxx xxxR xxRx"></hexagon-canvas></td>
+                <td>90&deg;<br />&rarr;</td>
+                <td><hexagon-canvas class="xs" edges="xxxR xRxx Rxxx"></hexagon-canvas></td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption>
+            All 8 possible placements of edge colors, represented on the hexagon.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        The reason this is so awkward on the hexagon is because we are exploiting a symmetry of the
+        cube. Geometrically, the cube and the hexagon are different objects with different symmetry
+        groups, so a geometric permutation of edges and corners on one object can look a lot
+        different on the other. However, having listed out the hexagon diagrams for all the
+        arrangements of edge color pieces, a different set of hexagon-based symmetries show up. The
+        patterns can be organized into two sets, where the patterns in each set are all 60&deg;
+        rotations of each other, a symmetry which is very natural on the hexagon.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tbody>
+              <tr>
+                <td>2&times;</td>
+                <td><hexagon-canvas class="xs" edges="xRxx xxxR Rxxx"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="xxRx Rxxx xxxR"></hexagon-canvas></td>
+              </tr>
+              <tr>
+                <td>6&times;</td>
+                <td><hexagon-canvas class="xs" edges="xxxR xRxx Rxxx"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="xxRx xRxx xxRx"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="Rxxx xxxR xxRx"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="Rxxx xxRx xxxR"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="xRxx xxRx xRxx"></hexagon-canvas></td>
+                <td><hexagon-canvas class="xs" edges="xxxR Rxxx xRxx"></hexagon-canvas></td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption>
+            The above table arranged differently, according to symmetries of the hexagon. The first
+            type of solution, using 3 outside edges, repeats after two 60&deg; rotations. The second
+            type of solution, using 1 outside edge, repeats after six 60&deg; rotations.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        Note that, because a 60&deg; rotation never causes an outside edge to become an inside edge
+        or vice versa, all diagrams within a set will always have the same number of outside edges.
+        The diagrams in the set of two all have 3 outside edges, and the diagrams in the set of six
+        all have 1 outside edge. Because a complete solution needs both the red and purple pieces to
+        be placed, and because those pieces must be placed according to these diagrams, the outside
+        edge of the hexagon will always contain a nonzero and even number of edge color pieces,
+        specifically 2, 4, or 6.
+      </p>
+
+      <h3 id="face-colors-on-the-hexagon">Face Colors On The Hexagon</h3>
+      <p>
+        To place the face colors on the hexagon, we'll start by reminding ourselves of the
+        constraints we explored earlier. We know that for each face color there are 4 possible
+        arrangements, that one of these will be occupied by the green corners, and that the pieces
+        will always lie in the edges perpendicular to the face whose color we're placing. Let's
+        start by visualizing one of the colors on the hexagon to see what we get.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <widget-canvas class="sm">
+                    <widget-cube init="xxG xBx xxx  xxx xxx xxx  xxx xxx Gxx"></widget-cube>
+                  </widget-canvas>
+                </td>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="xBxxxx"
+                    edges="xxxx xxxx xxxB"
+                  ></hexagon-canvas>
+                </td>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="xxBxxx"
+                    edges="xxxx xxxx xxBx"
+                  ></hexagon-canvas>
+                </td>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="xxxBxx"
+                    edges="xxxx xxxx Bxxx"
+                  ></hexagon-canvas>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption>
+            The possible arrangements of blue pieces, given a particular choice of green corner. In
+            our hexagon diagrams, the green corner always occupies the center spot.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        This is a start! But it would be nice if the corner and edge piece were next to each other
+        and moved like a single object. This would make it a lot easier to visualize the placement
+        of face colors. What we can do is rotate <em>just the vertices</em> by 180&deg;, to put them
+        next to the corresponding edge.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="xxxxBx"
+                    edges="xxxx xxxx xxxB"
+                  ></hexagon-canvas>
+                </td>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="xxxxxB"
+                    edges="xxxx xxxx xxBx"
+                  ></hexagon-canvas>
+                </td>
+                <td>
+                  <hexagon-canvas
+                    class="sm"
+                    vertices="Bxxxxx"
+                    edges="xxxx xxxx Bxxx"
+                  ></hexagon-canvas>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <figcaption>
+            Rotating the vertices by 180&deg; to place them next to the edges.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas
+            class="sm"
+            vertices="BxxxBB"
+            edges="xxxx xxxx BxBB"
+            style="margin: 3px"
+          ></hexagon-canvas>
+          <figcaption>All on the same diagram</figcaption>
+        </figure>
+      </div>
+      <p>
+        This seems to be what we want! It appears as if corner pieces are restricted to an outside
+        vertex, and the edge must be going in a particular direction relative to it. Indeed, if we
+        were to do this with the other face colors we would find a similar pattern. Each face color
+        is placed as a vertex-edge pair like this, with the edge going in a unique direction. We
+        will need to remember that the hexagon vertices no longer correspond directly to the cube
+        vertices as we were doing previously, but instead to the vertices 180&deg; away.
+      </p>
+      <p>
+        Note that, because the color of each corner and edge piece combination is uniquely
+        determined by its direction, and vice versa, we will omit the colors and use arrows instead.
+        We can always recover the colors for each arrow.
+      </p>
+      <p>
+        Recall that, in order to fit all the edge colors, we must leave 2, 4, or 6 outside edges
+        unused by face colors. If we leave all 6 outside edges open, we arrive at one particular
+        highly symmetric solution. This is the only solution of this type. Take a moment to study
+        the following figures to ensure that you understand how we're using the hexagon to describe
+        the placement of face colors.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube init="xxG xBx xxx  xWx OxY xKx  xxx xCx Gxx"></widget-cube>
+          </widget-canvas>
+          <figcaption>The face pieces and one choice of green placement.</figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" arrows="111111"></hexagon-canvas>
+          <figcaption>
+            The hexagon diagram for one solution given this choice of green placement.
+          </figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube init="YOG xBK CxW  xWC OxY BKx  KxB WCx GYO"></widget-cube>
+          </widget-canvas>
+          <figcaption>The face color placement described by this hexagon diagram.</figcaption>
+        </figure>
+      </div>
+      <p>
+        At this point it's worth pointing out that transforming any solution according to a symmetry
+        of the hexagon (i.e. rotations or reflections) will give another valid solution, after
+        relabeling the colors appropriately, since the number of outside edges and the set of angles
+        used by the arrows are not changed by the transformation. We can tell that any such
+        transformation of the above solution would result in the same solution.
+      </p>
+      <p>
+        How many ways are there to leave 4 outside edges open, i.e. use 2 edges for arrows? Since
+        solutions are symmetric up to reflections and rotations of the hexagon, we can start,
+        without loss of generality, by placing one arrow on the outside. To leave 4 outside edges
+        unused, we know that 4 of the 5 remaining arrows will have to be pointing inward, but one of
+        these directions is already used by the first arrow we placed, meaning there is only one
+        possible choice for how to place the remaining arrows. We also need to check that this
+        solution can fit an arrangement of red and purple pieces.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <hexagon-canvas class="sm" arrows="0xxxxx"></hexagon-canvas>
+          <figcaption>The first choice of edge, with no loss of generality.</figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" arrows="011112"></hexagon-canvas>
+          <figcaption>
+            The only valid completion of this pattern that leaves 4 outside edges unused.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" arrows="011112" edges="PxRx RxxP xxPR"></hexagon-canvas>
+          <figcaption>Adding in the red and purple edges.</figcaption>
+        </figure>
+        <figure>
+          <widget-canvas class="sm">
+            <widget-cube init="YPG RBK COW  BWC OxY PKR  KRO WCP GYB"></widget-cube>
+          </widget-canvas>
+          <figcaption>The solution described by this hexagon.</figcaption>
+        </figure>
+      </div>
+      <p>
+        Because this solution is symmetric with respect to reflection, there are only 5 other
+        solutions of this type, via repeated rotation by 60&deg;, for a total of 6.
+      </p>
+      <p>
+        Having found all the arrow placements that leave 6 and 4 outside edges open, and confirming
+        that an arrangement of red and purple pieces exists for the remaining edges, all that's left
+        to do is determine how many arrow placements leave 2 outside edges open while still leaving
+        room for red and purple.
+      </p>
+      <p>
+        Once again, because solutions are symmetric with respect to reflection and rotation, we can
+        start by placing an arbitrary arrow pointing inward and examine the 3 ways we can place a
+        second arrow pointing inward. We find that only one case works:
+      </p>
+      <div class="hstack center">
+        <figure>
+          <hexagon-canvas class="sm" arrows="1xxxx1" edges="xxxx xxxR xxxx"></hexagon-canvas>
+          <figcaption>
+            The arrows 1 vertex away. This arrangement forces the two vertical arrows into one spot,
+            marked in red, so does not work.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" arrows="1xxx1x" edges="xRxx Rxxx xxxx"></hexagon-canvas>
+          <figcaption>
+            The arrows 2 vertices away. The only valid placement of an arrow on the vertex between
+            them is pointing inward, so this solution does not work.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" arrows="120120" edges="xRPx xPRx xRPx"></hexagon-canvas>
+          <figcaption>
+            The arrows 3 vertices away. This solution works, and the placement of the remaining
+            arrows is forced. It can also fit the red and purple edges.
+          </figcaption>
+        </figure>
+      </div>
+      <p>
+        This solution is also symmetric with respect to reflection, repeated rotation by 60&deg;
+        will give us two other solutions of this type, for a total of 3.
+      </p>
 
       <h3 id="the-final-tally">The Final Tally</h3>
+      <p>
+        We identified 10 different ways to fill out the arrow diagram, each one corresponding to a
+        unique arrangement of face color pieces. Each one forces a specific arrangement of red and
+        purple pieces, where the only thing we can do is swap the red and purple.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <table>
+            <tr>
+              <td>1&times;</td>
+              <td><hexagon-canvas class="xs" arrows="111111"></hexagon-canvas></td>
+            </tr>
+            <tr>
+              <td>6&times;</td>
+              <td><hexagon-canvas class="xs" arrows="011112"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="201111"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="120111"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="112011"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="111201"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="111120"></hexagon-canvas></td>
+            </tr>
+            <tr>
+              <td>3&times;</td>
+              <td><hexagon-canvas class="xs" arrows="120120"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="012012"></hexagon-canvas></td>
+              <td><hexagon-canvas class="xs" arrows="201201"></hexagon-canvas></td>
+            </tr>
+          </table>
+          <figcaption>
+            Every arrangement of arrows. The diagrams in each row are rotations of each other.
+          </figcaption>
+        </figure>
+      </div>
+      <p>Thus, we can finally tally up the number of solutions:</p>
+      <ul>
+        <li>
+          4 choices of where to place the green corners, which will determine how the hexagon
+          diagram maps to the cube.
+        </li>
+        <li>
+          10 choices of how to place arrows on the hexagon, which will determine the placement of
+          all the face colors and leave 6 edges remaining for edge colors.
+        </li>
+        <li>2 choices of how to use the remaining edges for the edge colors.</li>
+      </ul>
+      <p>This gives us a total of <strong>80 solutions</strong>. &squ;</p>
+
+      <h2 id="other-work">Other Work</h2>
+      <p>
+        The <a href="https://www.jaapsch.net/puzzles/cubevari.htm">Rubik's Cube Variants</a> section
+        of Jaap's Puzzle Page mentions the Molecube, which he refers to as the Nine-Color Cube, and
+        also concludes that there are 80 solutions. (Note that his version of the puzzle uses
+        different colors, but the color types and piece inventory are the same as I used in this
+        article.) As far as I was able to find, he was the first person to identify and characterize
+        all 80 solutions, and did so years before I was even aware of the puzzle.
+      </p>
+      <p>
+        His argument is based on finding 3 different types of solution, characterizing the
+        permutations that go between them, and then counting the solutions based on that. For
+        example, the second type of solution can be reached from the first type of solution by
+        holding the cube such that a green corner (which on his puzzle is red) is at a particular
+        location, and executing a particular algorithm. Since there are 6 ways of doing this, there
+        are 6 times as many of the second pattern as the first pattern.
+      </p>
+      <p>
+        I found Jaap's argument unsatisfying, since he doesn't explain why these permutations always
+        lead to a new solution, meaning there could possibly be fewer than 80 unique solutions.
+        Furthermore, no explanation is given for why there are only 3 types of solution, meaning
+        there could possibly be <em>more</em> than 80 solutions. It's possible there's something I'm
+        not seeing, but I need it spelled out for me.
+      </p>
+      <p>
+        That's not to say I think Jaap's argument is <em>wrong</em>. And even if it
+        <em>were</em> wrong, he seems more interested in satisfying his curiosity than about
+        building an airtight argument, and I think the level of detail he used is perfectly
+        acceptable in that context. Indeed, what's remarkable is that, despite the vagueness of his
+        explanation, he has arrived at the correct number regardless. It took me a lot more writing
+        to convince myself that this number was correct. Maybe Jaap has spent so much time with so
+        many different puzzles that he doesn't need so many details and diagrams and enumerations to
+        convince himself. Maybe if I had studied his explanation in more detail, I would also be
+        convinced. However, I decided I would instead start from the ground up with a different
+        approach.
+      </p>
     </article>
+
+    <footer>
+      <p>&copy; 2023 Alex Iadicicco</p>
+      <p>
+        <a href="https://github.com/aji">GitHub</a> &middot;
+        <a href="https://cohost.org/aji">Cohost</a> &middot;
+        <a href="https://bsky.app/profile/aji.bsky.social">Bluesky</a>
+      </p>
+    </footer>
   </body>
 </html>
