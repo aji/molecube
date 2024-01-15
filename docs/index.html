@@ -11,7 +11,7 @@
   <body>
     <header>
       <h1>aji's Molecube Page</h1>
-      <p>January 14, 2024</p>
+      <p>January 14, 2024 (last edited January 15, 2024)</p>
     </header>
 
     <article>
@@ -659,16 +659,25 @@
         vertices as we were doing previously, but instead to the vertices 180&deg; away.
       </p>
       <p>
-        Note that, because the color of each corner and edge piece combination is uniquely
-        determined by its direction, and vice versa, we will omit the colors and use arrows instead.
-        We can always recover the colors for each arrow.
+        Note that, because, for a given choice of green placement, the color of each corner and edge
+        piece combination is uniquely determined by its direction, and vice versa, we will omit the
+        colors and use arrows instead. We can always recover the colors for each arrow.
       </p>
       <p>
         Recall that, in order to fit all the edge colors, we must leave 2, 4, or 6 outside edges
         unused by face colors. If we leave all 6 outside edges open, we arrive at one particular
-        highly symmetric solution. This is the only solution of this type. Take a moment to study
-        the following figures to ensure that you understand how we're using the hexagon to describe
-        the placement of face colors.
+        highly symmetric solution. This is the only solution of this type.
+      </p>
+      <div class="hstack center">
+        <figure>
+          <hexagon-canvas class="sm" arrows="111111"></hexagon-canvas>
+          <figcaption>The unique hexagon diagram that leaves 6 outside edges unused.</figcaption>
+        </figure>
+      </div>
+      <p>
+        To turn this diagram into a complete face color placement, we need to choose a placement of
+        the green colors, recover the unique face colors for each arrow, and undo the 180&deg;
+        rotation. The following figures show this process.
       </p>
       <div class="hstack center">
         <figure>
@@ -678,16 +687,22 @@
           <figcaption>The face pieces and one choice of green placement.</figcaption>
         </figure>
         <figure>
-          <hexagon-canvas class="sm" arrows="111111"></hexagon-canvas>
+          <hexagon-canvas class="sm" vertices="OWCYKB" edges="OxxY xKWx xCBx"></hexagon-canvas>
           <figcaption>
-            The hexagon diagram for one solution given this choice of green placement.
+            The above hexagon diagram, with colors for this choice of green placement.
+          </figcaption>
+        </figure>
+        <figure>
+          <hexagon-canvas class="sm" vertices="YKBOWC" edges="OPRY RKWP PCBR"></hexagon-canvas>
+          <figcaption>
+            Rotating the vertices by 180&deg; and adding one of two placements of edge colors.
           </figcaption>
         </figure>
         <figure>
           <widget-canvas class="sm">
-            <widget-cube init="YOG xBK CxW  xWC OxY BKx  KxB WCx GYO"></widget-cube>
+            <widget-cube init="YOG RBK CPW  PWC OxY BKR  KRB WCP GYO"></widget-cube>
           </widget-canvas>
-          <figcaption>The face color placement described by this hexagon diagram.</figcaption>
+          <figcaption>The resulting solution.</figcaption>
         </figure>
       </div>
       <p>
@@ -725,7 +740,9 @@
           <widget-canvas class="sm">
             <widget-cube init="YPG RBK COW  BWC OxY PKR  KRO WCP GYB"></widget-cube>
           </widget-canvas>
-          <figcaption>The solution described by this hexagon.</figcaption>
+          <figcaption>
+            The solution described by this hexagon for a choice of green placement.
+          </figcaption>
         </figure>
       </div>
       <p>
