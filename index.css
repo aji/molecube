@@ -8,6 +8,12 @@ body {
   font-size: 20px;
   padding: 1rem;
 }
+@media (max-width: 800px) {
+  body {
+    font-size: 18px;
+    padding: 0.5rem;
+  }
+}
 
 h1,
 h2,
@@ -110,6 +116,35 @@ div.hstack > figure {
 div.hstack > figure > figcaption {
   margin: 0.5rem;
   font-size: 16px;
+}
+
+@media (max-width: 800px) {
+  div.hstack {
+    gap: 0.5rem;
+    overflow-x: auto;
+  }
+  div.hstack.float {
+    float: none;
+    flex-wrap: wrap;
+    width: unset;
+    justify-content: center;
+  }
+}
+@media (max-width: 600px) {
+  div.hstack {
+    flex-direction: column;
+    margin: 0;
+  }
+  div.hstack > figure {
+    display: flex;
+    flex-basis: unset;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+  }
+  div.hstack.float {
+    margin: 0;
+  }
 }
 
 figure > img {
