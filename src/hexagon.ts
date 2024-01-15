@@ -33,11 +33,19 @@ class HexagonCanvas extends HTMLElement {
     this.canvas.setAttribute('width', `${rect.width}`);
     this.canvas.setAttribute('height', `${rect.height}`);
     this.requestAnimationFrame();
+
+    // horrible iOS safari hack
+    setTimeout(() => {
+      this.requestAnimationFrame();
+    }, 100 + Math.random() * 100);
   }
 
   frame() {
-    const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
     const { width: w, height: h } = this.canvas.getBoundingClientRect();
+    this.canvas.setAttribute('width', `${w}`);
+    this.canvas.setAttribute('height', `${h}`);
+
+    const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
 
     g.resetTransform();
 

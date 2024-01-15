@@ -202,13 +202,21 @@ class WidgetCanvas extends HTMLElement {
     this.camera.alt = parseAngleAttr(this.getAttribute('alt')) ?? this.camera.alt;
 
     this.requestAnimationFrame();
+
+    // horrible iOS safari hack
+    setTimeout(() => {
+      this.requestAnimationFrame();
+    }, 100 + Math.random() * 100);
   }
 
   frame() {
     this.animationFrameRequested = false;
 
-    const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
     const { width: w, height: h } = this.canvas.getBoundingClientRect();
+    this.canvas.setAttribute('width', `${w}`);
+    this.canvas.setAttribute('height', `${h}`);
+
+    const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
 
     g.resetTransform();
 
