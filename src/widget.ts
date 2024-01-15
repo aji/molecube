@@ -174,6 +174,7 @@ class WidgetCanvas extends HTMLElement {
 
   camera: Camera;
   canvas: HTMLCanvasElement;
+  animationFrameRequested: boolean;
 
   constructor() {
     super();
@@ -184,6 +185,8 @@ class WidgetCanvas extends HTMLElement {
     this.canvas.setAttribute('width', '1');
     this.canvas.setAttribute('height', '1');
     this.appendChild(this.canvas);
+
+    this.animationFrameRequested = false;
 
     this.addEventListener('mousedown', this.onMouseDown.bind(this));
     document.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -202,6 +205,8 @@ class WidgetCanvas extends HTMLElement {
   }
 
   frame() {
+    this.animationFrameRequested = false;
+
     const g: CanvasRenderingContext2D = expected(this.canvas.getContext('2d', { alpha: false }));
     const { width: w, height: h } = this.canvas.getBoundingClientRect();
 
@@ -243,7 +248,10 @@ class WidgetCanvas extends HTMLElement {
   }
 
   requestAnimationFrame() {
-    window.requestAnimationFrame(this.frame.bind(this));
+    if (!this.animationFrameRequested) {
+      this.animationFrameRequested = true;
+      window.requestAnimationFrame(this.frame.bind(this));
+    }
   }
 
   onMouseDown(e: MouseEvent): void {
@@ -277,6 +285,11 @@ class WidgetCanvas extends HTMLElement {
 
 abstract class Renderable extends HTMLElement {
   abstract render(): SceneObject[];
+  connectedCallback() {
+    if (this.parentElement instanceof WidgetCanvas) {
+      this.parentElement.requestAnimationFrame();
+    }
+  }
 }
 
 class WidgetCube extends Renderable {
@@ -288,6 +301,7 @@ class WidgetCube extends Renderable {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     const init = parseColorAttr(this.getAttribute('init'));
     if (init !== null) {
       for (let i = 0; i < 27; i++) {
