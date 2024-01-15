@@ -92,6 +92,7 @@ div.hstack {
   align-items: stretch;
   gap: 1rem;
   margin: 1rem;
+  max-width: 100%;
 }
 div.hstack.center {
   flex-wrap: wrap;
@@ -108,7 +109,8 @@ div.hstack.float {
 div.hstack > figure {
   flex-basis: min-content;
   flex-grow: 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  overflow-x: auto;
   margin: 0;
   border: 2px outset #fff;
   background-color: #ddd;
@@ -118,31 +120,9 @@ div.hstack > figure > figcaption {
   font-size: 16px;
 }
 
-@media (max-width: 800px) {
-  div.hstack {
-    gap: 0.5rem;
-    overflow-x: auto;
-  }
-  div.hstack.float {
-    float: none;
-    flex-wrap: wrap;
-    width: unset;
-    justify-content: center;
-  }
-}
 @media (max-width: 600px) {
   div.hstack {
-    flex-direction: column;
-    margin: 0;
-  }
-  div.hstack > figure {
-    display: flex;
-    flex-basis: unset;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-  }
-  div.hstack.float {
+    gap: 0.5rem;
     margin: 0;
   }
 }
